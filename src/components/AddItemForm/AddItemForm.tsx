@@ -8,7 +8,6 @@ type Props = {
 }
 
 export const AddItemForm: FC<Props> = memo(({ addItem, disabled = false }) => {
-
 	let [title, setTitle] = useState('')
 	let [error, setError] = useState<string | null>(null)
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { ChangeEvent, useCallback } from 'react'
 import { Checkbox, IconButton } from '@mui/material'
 import { EditableSpan } from '../../../../components/EditableSpan/EditableSpan'
@@ -30,9 +31,9 @@ export const Task = React.memo((props: TaskPropsType) => {
 			onChange={onChangeHandler}
 		/>
 
-		<EditableSpan value={props.task.title} onChange={onTitleChangeHandler}/>
+		<EditableSpan value={props.task.title} onChange={onTitleChangeHandler} />
 		<IconButton onClick={onClickHandler}>
-			<Delete/>
+			<Delete />
 		</IconButton>
 	</div>
 })
