@@ -1,9 +1,9 @@
-import { todolistsAPI, TodolistType } from "api/todolists-api";
 import { Dispatch } from "redux";
 import { appActions, RequestStatusType } from "app/app-reducer";
-import { handleServerNetworkError } from "utils/error-utils";
 import { AppThunk } from "app/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { handleServerNetworkError } from "utils";
+import { todolistsAPI, TodolistType } from "api/todolists-api";
 
 const slice = createSlice({
   name: "todolists",
@@ -20,17 +20,11 @@ const slice = createSlice({
       const index = state.findIndex((tl) => tl.id === action.payload.id);
       if (index !== -1) state[index].title = action.payload.title;
     },
-    changeTodolistFilter: (
-      state,
-      action: PayloadAction<{ id: string; filter: FilterValuesType }>
-    ) => {
+    changeTodolistFilter: (state, action: PayloadAction<{ id: string; filter: FilterValuesType }>) => {
       const index = state.findIndex((tl) => tl.id === action.payload.id);
       if (index !== -1) state[index].filter = action.payload.filter;
     },
-    changeTodolistEntityStatus: (
-      state,
-      action: PayloadAction<{ id: string; status: RequestStatusType }>
-    ) => {
+    changeTodolistEntityStatus: (state, action: PayloadAction<{ id: string; status: RequestStatusType }>) => {
       const index = state.findIndex((tl) => tl.id === action.payload.id);
       if (index !== -1) state[index].entityStatus = action.payload.status;
     },
