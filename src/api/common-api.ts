@@ -1,15 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios";
 
-const settings = {
-  withCredentials: true,
-  headers: {
-    "API-KEY": "1cdd9f77-c60e-4af5-b194-659e4ebd5d41",
-  },
-};
 export const instance = axios.create({
   baseURL: "https://social-network.samuraijs.com/api/1.1/",
-  ...settings,
+  withCredentials: true,
+  headers: {
+    "API-KEY": "851ccd71-58c3-4f92-b794-f803a4080a69",
+  },
 });
 
 export type ResponseType<D = {}> = {
