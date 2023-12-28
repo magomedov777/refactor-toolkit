@@ -5,19 +5,20 @@ import { appActions } from "app/app-reducer";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { todolistsActions } from "./todolists-reducer";
 import { createAppAsyncThunk } from "utils/create-app-async-thunk";
-import { TaskPriorities, TaskStatuses, handleServerAppError, handleServerNetworkError } from "utils";
-import { AddTaskArgType, TaskType, UpdateTaskArgType, UpdateTaskModelType, todolistsAPI } from "api/todolists-api";
+import { ResultCode, TaskPriorities, TaskStatuses, handleServerAppError, handleServerNetworkError } from "utils";
+import {
+  AddTaskArgType,
+  RemoveTaskType,
+  TaskType,
+  UpdateTaskArgType,
+  UpdateTaskModelType,
+  todolistsAPI,
+} from "api/todolists-api";
 
 const slice = createSlice({
   name: "tasks",
   initialState: {} as TasksStateType,
-  reducers: {
-    removeTask: (state, action: PayloadAction<{ taskId: string; todolistId: string }>) => {
-      let tasksForCurrentTodolist = state[action.payload.todolistId];
-      const index = tasksForCurrentTodolist.findIndex((tl) => tl.id === action.payload.taskId);
-      if (index !== -1) tasksForCurrentTodolist.splice(index, 1);
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchTasks.fulfilled, (state, action) => {
@@ -31,6 +32,11 @@ const slice = createSlice({
         let tasks = state[action.payload.todolistId];
         const index = tasks.findIndex((tl) => tl.id === action.payload.taskId);
         if (index !== -1) tasks[index] = { ...tasks[index], ...action.payload.domainModel };
+      })
+      .addCase(removeTask.fulfilled, (state, action) => {
+        let tasks = state[action.payload.todolistId];
+        const index = tasks.findIndex((tl) => tl.id === action.payload.taskId);
+        if (index !== -1) tasks.splice(index, 1);
       })
       .addCase(todolistsActions.addTodolist, (state, action) => {
         state[action.payload.todolist.id] = [];
@@ -60,12 +66,6 @@ const fetchTasks = createAppAsyncThunk<{ tasks: TaskType[]; todolistId: string }
     }
   }
 );
-
-enum ResultCode {
-  success = 0,
-  error = 1,
-  captcha = 10,
-}
 
 const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArgType>("tasks/addTask", async (arg, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
@@ -107,7 +107,7 @@ const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
         ...arg.domainModel,
       };
       const res = await todolistsAPI.updateTask(arg.todolistId, arg.taskId, apiModel);
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCode.success) {
         return arg;
       } else {
         handleServerAppError(res.data, dispatch);
@@ -120,17 +120,22 @@ const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
   }
 );
 
-export const removeTaskTC =
-  (taskId: string, todolistId: string): AppThunk =>
-  (dispatch) => {
-    todolistsAPI.deleteTask(todolistId, taskId).then(() => {
-      dispatch(tasksActions.removeTask({ taskId, todolistId }));
-    });
-  };
+const removeTask = createAppAsyncThunk<RemoveTaskType, RemoveTaskType>("tasks/removeTask", async (arg, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI;
+  try {
+    dispatch(appActions.setAppStatus({ status: "loading" }));
+    const res = await todolistsAPI.deleteTask(arg.todolistId, arg.taskId);
+    dispatch(appActions.setAppStatus({ status: "succeeded" }));
+    return { taskId: arg.taskId, todolistId: arg.todolistId };
+  } catch (err) {
+    handleServerNetworkError(err, dispatch);
+    return rejectWithValue(null);
+  }
+});
 
 export const tasksReducer = slice.reducer;
 export const tasksActions = slice.actions;
-export const tasksThunks = { fetchTasks, addTask, updateTask };
+export const tasksThunks = { fetchTasks, addTask, updateTask, removeTask };
 
 // types
 export type UpdateDomainTaskModelType = {
