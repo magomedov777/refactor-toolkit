@@ -3,7 +3,7 @@
 import { AppDispatch, AppRootStateType, AppThunk } from "app/store";
 import { appActions } from "app/app-reducer";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { todolistsActions } from "./todolists-reducer";
+import { todolistsActions, todolistsThunks } from "./todolists-reducer";
 import { createAppAsyncThunk } from "utils/create-app-async-thunk";
 import { ResultCode, TaskPriorities, TaskStatuses, handleServerAppError, handleServerNetworkError } from "utils";
 import {
@@ -44,7 +44,7 @@ const slice = createSlice({
       .addCase(todolistsActions.removeTodolist, (state, action) => {
         delete state[action.payload.id];
       })
-      .addCase(todolistsActions.setTodolists, (state, action) => {
+      .addCase(todolistsThunks.fetchTodolists.fulfilled, (state, action) => {
         action.payload.todolists.forEach((tl) => (state[tl.id] = []));
       });
   },
