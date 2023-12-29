@@ -1,6 +1,6 @@
 import { TaskPriorities, TaskStatuses } from "utils";
 import { tasksReducer, TasksStateType, tasksThunks } from "./tasks-reducer";
-import { todolistsActions } from "./todolists-reducer";
+import { todolistsActions, todolistsThunks } from "./todolists-reducer";
 
 let startState: TasksStateType = {};
 beforeEach(() => {
@@ -180,12 +180,13 @@ test("propertry with todolistId should be deleted", () => {
 });
 
 test("empty arrays should be added when we set todolists", () => {
-  const action = todolistsActions.setTodolists({
+  let args = {
     todolists: [
       { id: "1", title: "title 1", order: 0, addedDate: "" },
       { id: "2", title: "title 2", order: 0, addedDate: "" },
     ],
-  });
+  };
+  const action = todolistsThunks.fetchTodolists.fulfilled(args, "requestId", args);
 
   const endState = tasksReducer({}, action);
 

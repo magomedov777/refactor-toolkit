@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux'
 import { AppRootStateType } from 'app/store'
 import {
     addTodolistTC,
-    fetchTodolistsTC,
     FilterValuesType,
     removeTodolistTC,
     TodolistDomainType,
-    todolistsActions
+    todolistsActions,
+    todolistsThunks
 } from './todolists-reducer'
 import { TasksStateType, tasksThunks } from './tasks-reducer'
 import { Grid, Paper } from '@mui/material'
@@ -33,8 +33,7 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
         if (demo || !isLoggedIn) {
             return;
         }
-        const thunk = fetchTodolistsTC()
-        dispatch(thunk)
+        dispatch(todolistsThunks.fetchTodolists({ todolists }))
     }, [])
 
     const removeTask = useCallback(function (taskId: string, todolistId: string) {
