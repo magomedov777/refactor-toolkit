@@ -78,3 +78,8 @@ export type RemoveTaskType = {
 };
 
 export type UpdateTaskArgType = { taskId: string; domainModel: UpdateDomainTaskModelType; todolistId: string };
+
+export type TodoArgType = {
+  id: string;
+  title: string;
+};
