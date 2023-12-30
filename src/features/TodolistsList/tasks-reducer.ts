@@ -38,10 +38,10 @@ const slice = createSlice({
         const index = tasks.findIndex((tl) => tl.id === action.payload.taskId);
         if (index !== -1) tasks.splice(index, 1);
       })
-      .addCase(todolistsActions.addTodolist, (state, action) => {
+      .addCase(todolistsThunks.addTodolist.fulfilled, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
-      .addCase(todolistsActions.removeTodolist, (state, action) => {
+      .addCase(todolistsThunks.removeTodolist.fulfilled, (state, action) => {
         delete state[action.payload.id];
       })
       .addCase(todolistsThunks.fetchTodolists.fulfilled, (state, action) => {
