@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { appActions } from "app/app-reducer";
+import { appActions, appThunks } from "app/app-reducer";
 import { ResultCode, createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "utils";
 import { LoginParamsType, authAPI } from "./auth-api";
 
@@ -13,6 +13,9 @@ const slice = createSlice({
         state.isLoggedIn = action.payload.isLoggedIn;
       })
       .addCase(logout.fulfilled, (state, action) => {
+        state.isLoggedIn = action.payload.isLoggedIn;
+      })
+      .addCase(appThunks.initializeApp.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload.isLoggedIn;
       });
   },

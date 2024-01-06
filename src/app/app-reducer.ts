@@ -2,11 +2,14 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { authAPI } from "features/Login/auth-api";
 import { ResultCode, createAppAsyncThunk, handleServerNetworkError } from "utils";
 
+export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
+
 const initialState = {
   status: "idle" as RequestStatusType,
   error: null as string | null,
   isInitialized: false,
 };
+
 export type AppInitialStateType = typeof initialState;
 
 const slice = createSlice({
@@ -45,5 +48,4 @@ const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>("app/in
 export const appReducer = slice.reducer;
 export const appActions = slice.actions;
 export const appThunks = { initializeApp };
-
-export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
+export type InitializeAppThunk = typeof initializeApp;
