@@ -5,6 +5,7 @@ import { AppThunk } from "app/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerNetworkError } from "utils";
 import { TodoArgType, todolistsAPI, TodolistType } from "api/todolists-api";
+import { thunkTryCatch } from "utils/thunk-try-catch";
 
 const slice = createSlice({
   name: "todolists",
@@ -86,15 +87,10 @@ const addTodolist = createAppAsyncThunk<{ todolist: TodolistType }, string>(
   "todolists/addTodolist",
   async (title: string, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
-    try {
-      dispatch(appActions.setAppStatus({ status: "loading" }));
+    return thunkTryCatch(thunkAPI, async () => {
       const res = await todolistsAPI.createTodolist(title);
-      dispatch(appActions.setAppStatus({ status: "succeeded" }));
       return { todolist: res.data.data.item };
-    } catch (err) {
-      handleServerNetworkError(err, dispatch);
-      return rejectWithValue(null);
-    }
+    });
   }
 );
 

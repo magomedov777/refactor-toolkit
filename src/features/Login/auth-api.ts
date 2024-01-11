@@ -1,5 +1,5 @@
 import { instance } from "api/common-api";
-import { ResponseType } from "api/common-api";
+import { ResponseType } from "api/types";
 
 export type LoginParamsType = {
   email: string;
