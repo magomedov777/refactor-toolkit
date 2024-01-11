@@ -1,12 +1,15 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from 'react'
-import { useFormik } from 'formik'
+import { useFormik, FormikHelpers } from 'formik'
 import { authThunks } from './auth-reducer'
 import { AppRootStateType } from '../../app/store'
 import { Navigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from '@mui/material'
 import { useSelector } from 'react-redux'
+import { LoginParamsType } from './auth-api'
+import { ResponseType } from 'api/types'
+
 
 export const Login = () => {
     const dispatch = useAppDispatch()
@@ -32,15 +35,20 @@ export const Login = () => {
             password: '',
             rememberMe: false
         },
-        onSubmit: values => {
-            dispatch(authThunks.login(values));
+        onSubmit: (values: LoginParamsType, formikHelpers: FormikHelpers<LoginParamsType>) => {
+            dispatch(authThunks.login(values))
+                .unwrap()
+                .catch((reason: ResponseType) => {
+                    reason.fieldsErrors?.forEach((fieldError) => {
+                        formikHelpers.setFieldError(fieldError.field, fieldError.error)
+                    })
+                })
         },
     })
 
     if (isLoggedIn) {
         return <Navigate to={"/"} />
     }
-
 
     return <Grid container justifyContent="center">
         <Grid item xs={4}>

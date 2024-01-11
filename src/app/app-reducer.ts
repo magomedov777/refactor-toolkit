@@ -1,7 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { authAPI } from "features/Login/auth-api";
-import { ResultCode, createAppAsyncThunk, handleServerNetworkError } from "utils";
-
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 
 const initialState = {
@@ -28,24 +25,5 @@ const slice = createSlice({
   },
 });
 
-const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>("app/initializeApp", async (_, thunkAPI) => {
-  const { dispatch, rejectWithValue } = thunkAPI;
-  try {
-    const res = await authAPI.me();
-    if (res.data.resultCode === ResultCode.success) {
-      return { isLoggedIn: true };
-    } else {
-      return rejectWithValue(null);
-    }
-  } catch (e: any) {
-    handleServerNetworkError(e, dispatch);
-    return rejectWithValue(null);
-  } finally {
-    dispatch(appActions.setAppInitialized({ isInitialized: true }));
-  }
-});
-
 export const appReducer = slice.reducer;
 export const appActions = slice.actions;
-export const appThunks = { initializeApp };
-export type InitializeAppThunk = typeof initializeApp;
