@@ -21,7 +21,6 @@ import {
 } from '@mui/material';
 import { Menu } from '@mui/icons-material'
 import { authThunks } from 'features/Login/auth-reducer'
-import { bindActionCreators } from '@reduxjs/toolkit'
 import { useActions } from 'hooks'
 
 type PropsType = {
@@ -37,11 +36,6 @@ function App({ demo = false }: PropsType) {
 	useEffect(() => {
 		initializeApp()
 	}, [])
-	// useEffect(() => {
-	// 	bindActionCreators(authThunks.initializeApp, dispatch)()
-	// }, [])
-
-
 
 	const logoutHandler = useCallback(() => {
 		logout()
