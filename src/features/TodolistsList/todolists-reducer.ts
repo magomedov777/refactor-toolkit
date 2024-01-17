@@ -40,7 +40,11 @@ const slice = createSlice({
         if (index !== -1) state.splice(index, 1);
       })
       .addCase(addTodolist.fulfilled, (state, action) => {
-        state.unshift({ ...action.payload.todolist, filter: "all", entityStatus: "idle" });
+        state.unshift({
+          ...action.payload.todolist,
+          filter: "all",
+          entityStatus: "idle",
+        });
       })
       .addCase(changeTodolistTitle.fulfilled, (state, action) => {
         const index = state.findIndex((tl) => tl.id === action.payload.arg.id);
@@ -102,4 +106,9 @@ export type TodolistDomainType = TodolistType & {
 
 export const todolistsReducer = slice.reducer;
 export const todolistsActions = slice.actions;
-export const todolistsThunks = { fetchTodolists, removeTodolist, addTodolist, changeTodolistTitle };
+export const todolistsThunks = {
+  fetchTodolists,
+  removeTodolist,
+  addTodolist,
+  changeTodolistTitle,
+};
