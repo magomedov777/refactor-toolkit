@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { ChangeEvent, FC, memo } from "react";
+import React, { ChangeEvent, FC, memo, useCallback } from "react";
 import { Checkbox, IconButton } from "@mui/material";
 import { EditableSpan } from "../../../../components/EditableSpan/EditableSpan";
 import { Delete } from "@mui/icons-material";
@@ -8,19 +8,19 @@ import { TaskType } from "api/tasks-api";
 import { tasksThunks } from "features/TodolistsList/tasks-reducer";
 import { useActions } from "hooks";
 
-type Props = {
+interface Params {
   task: TaskType;
   todolistId: string;
-};
+}
 
-export const Task: FC<Props> = memo(({ task, todolistId }) => {
+export const Task: FC<Params> = memo(({ task, todolistId }) => {
   const { removeTask, updateTask } = useActions(tasksThunks);
 
-  const removeTaskHandler = () => {
+  const removeTaskHandler = useCallback(() => {
     removeTask({ taskId: task.id, todolistId: todolistId });
-  };
+  }, []);
 
-  const changeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const changeStatusHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const newStatus = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New;
     updateTask({
       taskId: task.id,
@@ -29,11 +29,11 @@ export const Task: FC<Props> = memo(({ task, todolistId }) => {
       },
       todolistId,
     });
-  };
+  }, []);
 
-  const changeTitleHandler = (newValue: string) => {
+  const changeTitleHandler = useCallback((newValue: string) => {
     updateTask({ taskId: task.id, domainModel: { title: newValue }, todolistId });
-  };
+  }, []);
 
   return (
     <div key={task.id} className={task.status === TaskStatuses.Completed ? "is-done" : ""}>

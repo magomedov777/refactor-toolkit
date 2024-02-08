@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect } from "react";
+import React, { FC, memo, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { AppRootStateType } from "app/store";
 import { TodolistDomainType, todolistsActions, todolistsThunks } from "./todolists-reducer";
@@ -10,11 +10,11 @@ import { Todolist } from "./Todolist/Todolist";
 import { Navigate } from "react-router-dom";
 import { useActions } from "hooks";
 
-type PropsType = {
+interface Props {
   demo?: boolean;
-};
+}
 
-export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
+export const TodolistsList: FC<Props> = memo(({ demo = false }) => {
   const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>((state) => state.todolists);
   const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks);
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
@@ -61,4 +61,4 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
       </Grid>
     </>
   );
-};
+});
