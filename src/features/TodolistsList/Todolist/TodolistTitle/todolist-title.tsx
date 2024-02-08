@@ -5,9 +5,9 @@ import { TodolistDomainType, todolistsThunks } from "features/TodolistsList/todo
 import { useActions } from "hooks";
 import React, { FC } from "react";
 
-type Props = {
+interface Props {
   todolist: TodolistDomainType;
-};
+}
 
 export const TodolistTitle: FC<Props> = ({ todolist }) => {
   const { removeTodolist, changeTodolistTitle } = useActions(todolistsThunks);
